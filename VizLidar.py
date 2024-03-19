@@ -1,6 +1,7 @@
 import pygame
 import math
 from rplidar import RPLidar
+import serial
 
 pygame.init()
 
@@ -23,6 +24,7 @@ screen = pygame.display.set_mode([800, 800])
 
 # Initialize RPLIDAR A1 sensor
 lidar = RPLidar('/dev/ttyUSB0')
+ser = serial.Serial('/dev/ttyACM0', 9600)  
 
 try:
     running = True
@@ -33,7 +35,26 @@ try:
             if event.type == pygame.QUIT:
                 running = False
                 break
+
+        # Get the state of keys being pressed
+        keys = pygame.key.get_pressed()
         
+        if keys[pygame.K_w]:
+            print('W key pressed')
+            ser.write(b'W')  # Send 'W' to Arduino as bytes
+        elif keys[pygame.K_a]:
+            print('A key pressed')
+            ser.write(b'A')  # Send 'A' to Arduino as bytes
+        elif keys[pygame.K_s]:
+            print('S key pressed')
+            ser.write(b'S')  # Send 'S' to Arduino as bytes
+        elif keys[pygame.K_d]:
+            print('D key pressed')
+            ser.write(b'D')  # Send 'D' to Arduino as bytes
+        else:
+            print('No key pressed')
+            ser.write(b'M')  # Send 'M' to Arduino as bytes when no key is pressed
+
         if not running:
             break
 
